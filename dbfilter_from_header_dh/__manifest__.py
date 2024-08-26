@@ -6,8 +6,8 @@
 {
     "name": "dbfilter_from_header_dh",
     "summary": "Filter databases with HTTP headers with working %d, %h patterns.",
-    "version": "17.0.1.0.0",
-    "website": "https://github.com/vertelab/odoo-server-tools",
+    "version": "1.0.0",
+    "website": "https://github.com/vertelab/odoo-server-tools/dbfilter_from_header_dh",
     "author": "Vertel AB, Therp BV, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "category": "Tools",
