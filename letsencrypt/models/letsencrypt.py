@@ -38,7 +38,7 @@ class Letsencrypt(models.AbstractModel):
         if stdout:
             _logger.log(loglevel, stdout)
         if process.returncode:
-            raise exceptions.Warning(
+            raise exceptions.UserError(
                 _("Error calling %s: %d") % (cmdline[0], process.returncode)
             )
         return process.returncode
@@ -86,7 +86,7 @@ class Letsencrypt(models.AbstractModel):
             return ip.iptype() == "PRIVATE"
 
         if domain in local_domains or _ip_is_private(domain):
-            raise exceptions.Warning(
+            raise exceptions.UserError(
                 _(
                     "Let's encrypt doesn't work with private addresses "
                     "or local domains!"
