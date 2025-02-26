@@ -4,10 +4,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
-    "name": "dbfilter_from_header_dh",
-    "summary": "Filter databases with HTTP headers with working %d, %h patterns.",
-    "version": "1.0.0",
-    "website": "https://github.com/vertelab/odoo-server-tools/dbfilter_from_header_dh",
+    'name': 'Tools: dbfilter_from_header_dh',
+    'summary': 'Filter databases with HTTP headers with working %d, %h patterns.',
+    'version': '1.0.0',
+    'website': 'https://github.com/vertelab/odoo-server-tools/dbfilter_from_header_dh',
     "author": "Vertel AB, Therp BV, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "category": "Tools",
