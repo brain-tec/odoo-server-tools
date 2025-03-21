@@ -148,8 +148,11 @@ class Letsencrypt(models.AbstractModel):
             .replace("%KEY_PATH%", key)
         )
         conf_path = os.path.join(get_data_dir(), "%s.conf" % domain)
-        with open(conf_path, "w") as conf:
-            conf.write(conf_text)
+        if not os.path.exists(conf_path):
+            with open(conf_path, "w") as conf:
+                conf.write(conf_text)
+        #with open(conf_path, "w") as conf:
+        #    conf.write(conf_text)
         reload_cmd = parameter_obj.get_param("letsencrypt.reload_command", False)
         if reload_cmd:
             _logger.info("reloading webserver...")
