@@ -58,6 +58,7 @@ server {
 \tproxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 \tproxy_set_header X-Forwarded-Proto $scheme;
 \tproxy_set_header X-Real-IP $remote_addr;
+\proxy_set_header X-Odoo-dbfilter "^%DATABASE%$dollar";
 \tlocation /.well-known/acme-challenge/ {
 \t\tproxy_redirect off;
 \t\tproxy_pass http://odoo;
@@ -79,6 +80,7 @@ server {
 \tproxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 \tproxy_set_header X-Forwarded-Proto $scheme;
 \tproxy_set_header X-Real-IP $remote_addr;
+\proxy_set_header X-Odoo-dbfilter "^%DATABASE%$dollar";
 \t
 \t# SSL parameters
 \tssl_certificate %CRT_PATH%;
@@ -147,11 +149,12 @@ class Letsencrypt(models.AbstractModel):
                 conf_template = mfile.read()
         else:
             _logger.warning("Nginx template file not found. Using fallback.")
-
+        database_name  = self.env.cr.dbname
         conf_text = (
             conf_template.replace("%HOSTNAMES%", hostname)
             .replace("%CRT_PATH%", crt)
             .replace("%KEY_PATH%", key)
+            .replace("%DATABASE%", database_name)
         )
         conf_path = os.path.join(get_data_dir(), "%s.conf" % domain)
         with open(conf_path, "w") as conf:
