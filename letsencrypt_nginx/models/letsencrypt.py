@@ -178,7 +178,7 @@ class Letsencrypt(models.AbstractModel):
 
         if domain and cron_job:
             
-            self.env['ir.config_parameter'].sudo().set_param('web.base.url', f'https://{doamin}')
+            self.env['ir.config_parameter'].sudo().set_param('web.base.url', f'https://{domain}')
             self.env['ir.config_parameter'].sudo().set_param('letsencrypt.altname.1', f'www.{domain}')
             self.env['ir.config_parameter'].sudo().set_param('letsencrypt.altname.2', domain.replace(domain.rsplit(".",1)[1],"azzar.org"))
             
