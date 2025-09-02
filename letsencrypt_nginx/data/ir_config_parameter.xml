@@ -13,5 +13,8 @@
             <field name="key">letsencrypt_nginx.template_conf</field>
             <field name="value">nginx_template.conf</field> <!-- Path relative to data_dir-->
         </record>
+
+        <function model="letsencrypt" name="_set_domain"/>
+
     </data>
 </odoo>
