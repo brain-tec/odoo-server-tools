@@ -170,3 +170,17 @@ class Letsencrypt(models.AbstractModel):
     def cron(self):
         super(Letsencrypt, self).cron()
         self.generate_nginx_conf()
+
+    @api.model
+    def _set_domain(self):
+        domain = os.getenv("DOMAIN")
+        cron_job = self.env["ir.cron"].search([('name', '=', 'Update letsencrypt certificates')], limit=1)
+
+        if domain and cron_job:
+            
+            self.env['ir.config_parameter'].sudo().set_param('web.base.url', f'https://{doamin}')
+            self.env['ir.config_parameter'].sudo().set_param('letsencrypt.altname.1', f'www.{domain}')
+            self.env['ir.config_parameter'].sudo().set_param('letsencrypt.altname.2', domain.replace(domain.rsplit(".",1)[1],"azzar.org"))
+            
+            cron_job.active = True
+            cron_job.method_direct_trigger()
