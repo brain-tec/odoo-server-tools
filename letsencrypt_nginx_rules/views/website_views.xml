@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_website_nginx_form" model="ir.ui.view">
+            <field name="name">website.nginx.form</field>
+            <field name="model">website</field>
+            <field name="inherit_id" ref="website.view_website_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[last()]" position="after">
+                    <page string="Nginx Rules" name="nginx_rules">
+                        <header>
+                            <button name="generate_new_config" string="Generate Config" type="object" class="oe_highlight"/>
+                        </header>
+                        <group>
+                            <field name="nginx_db_filter"/>
+                        </group>
+                        <field name="nginx_rules">
+                            <list editable="bottom">
+                                <field name="domain" string="Source Domain"/>
+                            </list>
+                        </field>
+                        <group>
+                            <field name="nginx_config" nolabel="1"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

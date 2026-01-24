@@ -140,7 +140,7 @@ class Letsencrypt(models.AbstractModel):
             with open(conf_template_path) as mfile:
                 conf_template = mfile.read()
         else:
-            _logger.warn("Nginx template file not found. Using fallback.")
+            _logger.warning("Nginx template file not found. Using fallback.")
 
         conf_text = (
             conf_template.replace("%HOSTNAMES%", hostname)
@@ -159,7 +159,7 @@ class Letsencrypt(models.AbstractModel):
             try:
                 self.call_cmdline(["sh", "-c", reload_cmd])
             except:
-                _logger.warn(
+                _logger.warning(
                     "Failed to reload webserver. Removing config for %s and restarting!\n\nFailed config saved as %s."
                     % (domain, conf_path + "_failed")
                 )

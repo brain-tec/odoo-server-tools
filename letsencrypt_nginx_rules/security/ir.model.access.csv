@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+letsencrypt_nginx_rules.access_website_nginx_rules,access_website_nginx_rules,letsencrypt_nginx_rules.model_website_nginx_rules,base.group_user,1,1,1,1
