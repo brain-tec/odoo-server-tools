@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+
+        <record id="db_backup_configure_view_form" model="ir.ui.view">
+            <field name="name">db.backup.configure.added.endpoint.view.form</field>
+            <field name="model">db.backup.configure</field>
+            <field name="inherit_id" ref="auto_database_backup.db_backup_configure_view_form"/>
+            <field name="arch" type="xml">
+                <field name="aws_secret_access_key" position="after">
+                    <field name="endpoint" invisible="backup_destination != 'amazon_s3'"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>
