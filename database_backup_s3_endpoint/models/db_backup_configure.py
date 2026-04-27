@@ -23,6 +23,49 @@ class DbBackupConfigure(models.Model):
     endpoint = fields.Char()
     region = fields.Char()
 
+    def action_s3cloud(self):
+        """If it has aws_secret_access_key, which will perform s3cloud
+        operations for connection test"""
+        if self.aws_access_key and self.aws_secret_access_key:
+            try:
+                s3_client = boto3.client(
+                    's3',
+                    aws_access_key_id=self.aws_access_key,
+                    aws_secret_access_key=self.aws_secret_access_key,
+                    endpoint_url=self.endpoint if self.endpoint else None,
+                    region_name=self.region if self.region else None
+                )
+                response = s3_client.head_bucket(Bucket=self.bucket_file_name)
+                if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+                    self.active = self.hide_active = True
+                    return {
+                        'type': 'ir.actions.client',
+                        'tag': 'display_notification',
+                        'params': {
+                            'type': 'success',
+                            'title': _("Connection Test Succeeded!"),
+                            'message': _(
+                                "Everything seems properly set up!"),
+                            'sticky': False,
+                        }
+                    }
+                raise UserError(
+                    _("Bucket not found. Please check the bucket name and"
+                    " try again."))
+            except Exception:
+                self.active = self.hide_active = False
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'type': 'danger',
+                        'title': _("Connection Test Failed!"),
+                        'message': _("An error occurred while testing the "
+                                    "connection."),
+                        'sticky': False,
+                    }
+                }
+
 
     def _schedule_auto_backup(self, frequency):
         """Function for generating and storing backup.
@@ -34,7 +77,7 @@ class DbBackupConfigure(models.Model):
         mail_template_failed = self.env.ref(
             'auto_database_backup.mail_template_data_db_backup_failed')
         for rec in records:
-            backup_time = fields.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
+            backup_time = fields.datetime.now(fields.datetime.timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
             backup_filename = f"{rec.db_name}_{backup_time}.{rec.backup_format}"
             rec.backup_filename = backup_filename
             # Local backup
