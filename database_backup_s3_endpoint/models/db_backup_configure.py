@@ -20,8 +20,8 @@ _logger = logging.getLogger(__name__)
 class DbBackupConfigure(models.Model):
     _inherit = 'db.backup.configure'
 
-    endpoint = fields.Char()
-    region = fields.Char()
+    endpoint = fields.Char(help="The endpoint of your bucket. This field should be used if the bucket isn't stored on Amazon but with a different provider.")
+    region = fields.Char(help="The region of the bucket.")
 
     def action_s3cloud(self):
         """If it has aws_secret_access_key, which will perform s3cloud
