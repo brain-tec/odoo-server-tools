@@ -18,10 +18,10 @@ from odoo.exceptions import UserError, AccessError, ValidationError
 _logger = logging.getLogger(__name__)
 
 class DbBackupConfigure(models.Model):
-    
     _inherit = 'db.backup.configure'
 
     endpoint = fields.Char()
+    region = fields.Char()
 
 
     def _schedule_auto_backup(self, frequency):
@@ -408,7 +408,9 @@ class DbBackupConfigure(models.Model):
                             's3',
                             aws_access_key_id=rec.aws_access_key,
                             aws_secret_access_key=rec.aws_secret_access_key,
-                            endpoint_url=rec.endpoint)
+                            endpoint_url=rec.endpoint if rec.endpoint else None,
+                            region_name=rec.region if rec.region else None)
+
                         # If auto_remove is enabled, remove the backups that
                         # are older than specified days from the S3 bucket
                         if rec.auto_remove:
