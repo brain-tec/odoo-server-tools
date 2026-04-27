@@ -77,7 +77,7 @@ class DbBackupConfigure(models.Model):
         mail_template_failed = self.env.ref(
             'auto_database_backup.mail_template_data_db_backup_failed')
         for rec in records:
-            backup_time = fields.datetime.now(fields.datetime.timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
+            backup_time = fields.Datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             backup_filename = f"{rec.db_name}_{backup_time}.{rec.backup_format}"
             rec.backup_filename = backup_filename
             # Local backup
