@@ -476,7 +476,9 @@ class DbBackupConfigure(models.Model):
                         s3 = boto3.resource(
                             's3',
                             aws_access_key_id=rec.aws_access_key,
-                            aws_secret_access_key=rec.aws_secret_access_key)
+                            aws_secret_access_key=rec.aws_secret_access_key,
+                            endpoint_url=rec.endpoint if rec.endpoint else None,
+                            region_name=rec.region if rec.region else None)
                         # Create a folder in the specified bucket, if it
                         # doesn't already exist
                         s3.Object(rec.bucket_file_name,
