@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <field name="aws_secret_access_key" position="after">
                     <field name="endpoint" invisible="backup_destination != 'amazon_s3'"/>
+                    <field name="region" invisible="backup_destination != 'amazon_s3'"/>
                 </field>
             </field>
         </record>

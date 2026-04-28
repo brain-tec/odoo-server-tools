@@ -18,10 +18,53 @@ from odoo.exceptions import UserError, AccessError, ValidationError
 _logger = logging.getLogger(__name__)
 
 class DbBackupConfigure(models.Model):
-    
     _inherit = 'db.backup.configure'
 
-    endpoint = fields.Char()
+    endpoint = fields.Char(help="The endpoint of your bucket. This field should be used if the bucket isn't stored on Amazon but with a different provider.")
+    region = fields.Char(help="The region of the bucket.")
+
+    def action_s3cloud(self):
+        """If it has aws_secret_access_key, which will perform s3cloud
+        operations for connection test"""
+        if self.aws_access_key and self.aws_secret_access_key:
+            try:
+                s3_client = boto3.client(
+                    's3',
+                    aws_access_key_id=self.aws_access_key,
+                    aws_secret_access_key=self.aws_secret_access_key,
+                    endpoint_url=self.endpoint if self.endpoint else None,
+                    region_name=self.region if self.region else None
+                )
+                response = s3_client.head_bucket(Bucket=self.bucket_file_name)
+                if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+                    self.active = self.hide_active = True
+                    return {
+                        'type': 'ir.actions.client',
+                        'tag': 'display_notification',
+                        'params': {
+                            'type': 'success',
+                            'title': _("Connection Test Succeeded!"),
+                            'message': _(
+                                "Everything seems properly set up!"),
+                            'sticky': False,
+                        }
+                    }
+                raise UserError(
+                    _("Bucket not found. Please check the bucket name and"
+                    " try again."))
+            except Exception:
+                self.active = self.hide_active = False
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'type': 'danger',
+                        'title': _("Connection Test Failed!"),
+                        'message': _("An error occurred while testing the "
+                                    "connection."),
+                        'sticky': False,
+                    }
+                }
 
 
     def _schedule_auto_backup(self, frequency):
@@ -34,7 +77,7 @@ class DbBackupConfigure(models.Model):
         mail_template_failed = self.env.ref(
             'auto_database_backup.mail_template_data_db_backup_failed')
         for rec in records:
-            backup_time = fields.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
+            backup_time = fields.Datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             backup_filename = f"{rec.db_name}_{backup_time}.{rec.backup_format}"
             rec.backup_filename = backup_filename
             # Local backup
@@ -408,7 +451,9 @@ class DbBackupConfigure(models.Model):
                             's3',
                             aws_access_key_id=rec.aws_access_key,
                             aws_secret_access_key=rec.aws_secret_access_key,
-                            endpoint_url=rec.endpoint)
+                            endpoint_url=rec.endpoint if rec.endpoint else None,
+                            region_name=rec.region if rec.region else None)
+
                         # If auto_remove is enabled, remove the backups that
                         # are older than specified days from the S3 bucket
                         if rec.auto_remove:
@@ -431,7 +476,9 @@ class DbBackupConfigure(models.Model):
                         s3 = boto3.resource(
                             's3',
                             aws_access_key_id=rec.aws_access_key,
-                            aws_secret_access_key=rec.aws_secret_access_key)
+                            aws_secret_access_key=rec.aws_secret_access_key,
+                            endpoint_url=rec.endpoint if rec.endpoint else None,
+                            region_name=rec.region if rec.region else None)
                         # Create a folder in the specified bucket, if it
                         # doesn't already exist
                         s3.Object(rec.bucket_file_name,
