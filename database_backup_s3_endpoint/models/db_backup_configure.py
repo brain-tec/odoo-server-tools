@@ -458,12 +458,14 @@ class DbBackupConfigure(models.Model):
                         # are older than specified days from the S3 bucket
                         if rec.auto_remove:
                             folder_path = rec.aws_folder_name
-                            response = bo3.list_objects(
+                            response = bo3.list_objects_v2(
                                 Bucket=rec.bucket_file_name,
                                 Prefix=folder_path)
                             today = fields.date.today()
-                            for file in response['Contents']:
+                            for file in response.get('Contents', []):
                                 file_path = file['Key']
+                                if file_path == f"{folder_path}/":
+                                    continue
                                 last_modified = file['LastModified']
                                 date = last_modified.date()
                                 age_in_days = (today - date).days
