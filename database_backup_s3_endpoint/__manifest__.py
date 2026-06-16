@@ -37,7 +37,10 @@
     'images': ['static/description/banner.png'], # 560x280
     'license': 'AGPL-3',
     'depends': ["auto_database_backup"],
-    'data': ["views/db_backup_configure_views.xml"],
+    'data': [
+        "data/ir_cron_data.xml",
+        "views/db_backup_configure_views.xml",
+    ],
     'demo': [],
     'application': False,
     'installable': True,    

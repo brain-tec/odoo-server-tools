@@ -8,12 +8,16 @@ import nextcloud_client
 import os
 import paramiko
 import requests
+import shutil
+import subprocess
 import tempfile
 from nextcloud import NextCloud
 from requests.auth import HTTPBasicAuth
 
+import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError, ValidationError
+from odoo.tools.misc import find_pg_tool, exec_pg_environ
 
 _logger = logging.getLogger(__name__)
 
@@ -22,6 +26,44 @@ class DbBackupConfigure(models.Model):
 
     endpoint = fields.Char(help="The endpoint of your bucket. This field should be used if the bucket isn't stored on Amazon but with a different provider.")
     region = fields.Char(help="The region of the bucket.")
+
+    def dump_data(self, db_name, stream, backup_format, backup_frequency):
+        _logger.info('DUMP DB: %s format %s', db_name, backup_format)
+        cmd = [find_pg_tool('pg_dump'), '--no-owner', db_name]
+        cmd_env = exec_pg_environ()
+        if backup_format == 'zip':
+            with tempfile.TemporaryDirectory() as dump_dir:
+                filestore = odoo.tools.config.filestore(db_name)
+                cmd.insert(-1, '--file=' + os.path.join(dump_dir, 'dump.sql'))
+                subprocess.run(cmd, env=cmd_env, stdout=subprocess.DEVNULL,
+                               stderr=subprocess.STDOUT, check=True)
+                if os.path.exists(filestore):
+                    shutil.copytree(filestore,
+                                    os.path.join(dump_dir, 'filestore'))
+                with open(os.path.join(dump_dir, 'manifest.json'), 'w') as fh:
+                    db = odoo.sql_db.db_connect(db_name)
+                    with db.cursor() as cr:
+                        json.dump(self._dump_db_manifest(cr), fh, indent=4)
+                if stream:
+                    odoo.tools.osutil.zip_dir(dump_dir, stream,
+                                              include_dir=False,
+                                              fnct_sort=lambda
+                                                  file_name: file_name != 'dump.sql')
+                else:
+                    t = tempfile.TemporaryFile()
+                    odoo.tools.osutil.zip_dir(dump_dir, t, include_dir=False,
+                                              fnct_sort=lambda
+                                                  file_name: file_name != 'dump.sql')
+                    t.seek(0)
+                    return t
+        else:
+            cmd.insert(-1, '--format=c')
+            process = subprocess.Popen(cmd, env=cmd_env, stdout=subprocess.PIPE)
+            stdout, _ = process.communicate()
+            if stream:
+                stream.write(stdout)
+            else:
+                return stdout
 
     def action_s3cloud(self):
         """If it has aws_secret_access_key, which will perform s3cloud
@@ -71,7 +113,9 @@ class DbBackupConfigure(models.Model):
         """Function for generating and storing backup.
            Database backup for all the active records in backup configuration
            model will be created."""
+        _logger.info('Scheduled backup started for frequency: %s', frequency)
         records = self.search([('backup_frequency', '=', frequency)])
+        _logger.info('Found %d record(s) for %s backup', len(records), frequency)
         mail_template_success = self.env.ref(
             'auto_database_backup.mail_template_data_db_backup_successful')
         mail_template_failed = self.env.ref(
