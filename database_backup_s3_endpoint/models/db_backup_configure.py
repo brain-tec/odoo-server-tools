@@ -113,6 +113,7 @@ class DbBackupConfigure(models.Model):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for rec in self:
             rec.onedrive_redirect_uri = base_url + '/onedrive/authentication'
+            rec.gdrive_redirect_uri = base_url + '/google_drive/authentication'
 
     def _schedule_auto_backup(self, frequency):
         """Function for generating and storing backup.
