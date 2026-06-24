@@ -2,16 +2,16 @@
 <odoo>
     <record id="auto_database_backup.ir_cron_auto_db_backup_daily" model="ir.cron">
         <field name="active" eval="True"/>
-        <field name="nextcall" eval="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="nextcall" eval="datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
 
     <record id="auto_database_backup.ir_cron_auto_db_backup_weekly" model="ir.cron">
         <field name="active" eval="True"/>
-        <field name="nextcall" eval="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="nextcall" eval="datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
 
     <record id="auto_database_backup.ir_cron_auto_db_backup_monthly" model="ir.cron">
         <field name="active" eval="True"/>
-        <field name="nextcall" eval="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="nextcall" eval="datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
 </odoo>
