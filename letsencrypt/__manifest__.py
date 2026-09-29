@@ -23,18 +23,27 @@
 
 {
     'name': 'Server Tools: Let''s Encrypt',
-    'version': '1.1',
-    'summary': 'Request SSL certificates from letsencrypt.org',
+    'version': '18.0.1.1.0',
+    'summary': 'Request SSL certificates from letsencrypt.org.',
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/14.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Technical',
-    'description': """
-    Request SSL certificates from letsencrypt.org
-    """,
+    'description': '''
+Lets Encrypt
+============
+
+    Request SSL certificates from letsencrypt.org.
+
+    Features:
+
+        - Web integration: Exposes HTTP endpoints for external systems.
+        - Automation: Scheduled jobs: Update letsencrypt certificates.
+        - Extends Odoo: Builds on letsencrypt.
+    ''',
     #'sequence': '1',
     'author': 'Therp BV, Tecnativa, Vertel AB, Odoo Community Association (OCA)',
-    'website': 'https://therp.nl/',
+    'website': 'https://vertel.se/apps/odoo-server-tools/letsencrypt',
     'images': ['static/description/banner.png'], # 560x280 px.
     'license': 'AGPL-3',
     'contributor': '',
@@ -49,4 +58,3 @@
     "installable": True,
     "external_dependencies": {"bin": ["openssl",], "python": ["acme_tiny", "IPy",],},
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

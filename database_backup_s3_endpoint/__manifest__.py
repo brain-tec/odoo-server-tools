@@ -23,17 +23,23 @@
 #
 {
     'name': 'Server Tools: database backup s3 endpoint',
-    'version': '1.0',
-    'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.odoo.com""",
+    'version': '18.0.1.0.0',
+    'summary': "Adds S3 endpoint support to database backups.",
     'category': '', # Technical Settings|Localization|Payroll Localization|Account Charts|User types|Invoicing|Sales|Human Resources|Operations|Marketing|Manufacturing|Website|Theme|Administration|Appraisals|Sign|Helpdesk|Administration|Extra Rights|Other Extra Rights|
-    'description': """
-        Long description of module's purpose
-    """,
+    'description': '''
+database backup s3 endpoint
+===========================
+
+    Adds S3 endpoint support to database backups.
+
+    Features:
+
+        - UI Integration: Extends 1 view(s) in the Odoo interface.
+        - Extends Odoo: Builds on db.backup.configure.
+    ''',
 
     'author': 'Vertel AB',
-    'website': 'https://vertel.se/apps/odoo-',
+    'website': 'https://vertel.se/apps/odoo-server-tools/database_backup_s3_endpoint',
     'images': ['static/description/banner.png'], # 560x280
     'license': 'AGPL-3',
     'depends': ["auto_database_backup"],
