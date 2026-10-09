@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Odoo SA, Open Source Management Solution, third party addon
-#    Copyright (C) 2022- Vertel AB (<https://vertel.se>).
+#    Copyright (C) 2022- Vertel Sverige AB (<https://vertel.se>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -23,31 +23,22 @@
 
 {
     'name': 'Server Tools: Let''s Encrypt',
-    'version': '18.0.1.1.0',
-    'summary': 'Request SSL certificates from letsencrypt.org.',
+    'version': '1.1',
+    'summary': 'Request SSL certificates from letsencrypt.org',
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/14.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Technical',
-    'description': '''
-Lets Encrypt
-============
-
-    Request SSL certificates from letsencrypt.org.
-
-    Features:
-
-        - Web integration: Exposes HTTP endpoints for external systems.
-        - Automation: Scheduled jobs: Update letsencrypt certificates.
-        - Extends Odoo: Builds on letsencrypt.
-    ''',
+    'description': """
+    Request SSL certificates from letsencrypt.org
+    """,
     #'sequence': '1',
-    'author': 'Therp BV, Tecnativa, Vertel AB, Odoo Community Association (OCA)',
-    'website': 'https://vertel.se/apps/odoo-server-tools/letsencrypt',
+    'author': 'Therp BV, Tecnativa, Vertel Sverige AB, Odoo Community Association (OCA)',
+    'website': 'https://therp.nl/',
     'images': ['static/description/banner.png'], # 560x280 px.
     'license': 'AGPL-3',
     'contributor': '',
-    'maintainer': 'Vertel AB',
+    'maintainer': 'Vertel Sverige AB',
     'repository': 'https://github.com/vertelab/odoo-server-tools',
     # Any module necessary for this one to work correctly
 
@@ -58,3 +49,4 @@ Lets Encrypt
     "installable": True,
     "external_dependencies": {"bin": ["openssl",], "python": ["acme_tiny", "IPy",],},
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
